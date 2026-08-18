@@ -41,7 +41,17 @@ const errorHandler = (err, req, res, next) => {
     message = 'Session expired. Please login again.';
   }
 
-  // ─── express-validator errors ─────────────────────────
+  // ─── Zod Validation Errors ───────────────────────────
+  if (err.name === 'ZodError') {
+    statusCode = 422;
+    message = 'Validation failed';
+    errors = err.errors.map((e) => ({
+      field: e.path.join('.'),
+      message: e.message,
+    }));
+  }
+
+  // ─── Legacy validation errors ─────────────────────────
   if (err.type === 'validation') {
     statusCode = 422;
     errors = err.errors;

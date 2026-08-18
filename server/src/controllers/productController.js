@@ -1,23 +1,6 @@
-const { body } = require('express-validator');
 const ProductBatch = require('../models/ProductBatch');
 const SHGProfile = require('../models/SHGProfile');
 const { AppError } = require('../middlewares/auth');
-
-// ─── Validation ────────────────────────────────────────────
-const createBatchValidation = [
-  body('category')
-    .isIn(['Handicrafts', 'Organic Produce', 'Processed Food', 'Textiles', 'Other'])
-    .withMessage('Invalid category'),
-  body('productName').trim().notEmpty().withMessage('Product name is required'),
-  body('unitPrice').isFloat({ min: 0.01 }).withMessage('Valid unit price required'),
-  body('unit')
-    .isIn(['kg', 'gram', 'litre', 'ml', 'piece', 'dozen', 'meter', 'bundle', 'box', 'bag'])
-    .withMessage('Invalid unit of measurement'),
-  body('moq').isInt({ min: 1 }).withMessage('MOQ must be at least 1'),
-  body('currentStock').isInt({ min: 0 }).withMessage('Stock cannot be negative'),
-  body('productionCapacity').isInt({ min: 0 }).withMessage('Production capacity cannot be negative'),
-  body('leadTimeDays').isInt({ min: 1 }).withMessage('Lead time must be at least 1 day'),
-];
 
 // ─── Helpers ───────────────────────────────────────────────
 const buildProductFilter = (query) => {
@@ -218,5 +201,4 @@ module.exports = {
   updateBatch,
   deleteBatch,
   getMyBatches,
-  createBatchValidation,
 };

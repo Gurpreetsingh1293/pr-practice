@@ -1,32 +1,6 @@
-const { body, query } = require('express-validator');
 const SHGProfile = require('../models/SHGProfile');
 const { AppError } = require('../middlewares/auth');
 const { findNearbySHGs, findSHGsByDistrict } = require('../services/geoService');
-
-// ─── Validation Chains ─────────────────────────────────────
-
-const createProfileValidation = [
-  body('groupName').trim().notEmpty().withMessage('Group name is required'),
-  body('clusterName').trim().notEmpty().withMessage('Cluster name is required'),
-  body('district').trim().notEmpty().withMessage('District is required'),
-  body('state').trim().notEmpty().withMessage('State is required'),
-  body('memberCount')
-    .isInt({ min: 1, max: 500 })
-    .withMessage('Member count must be between 1 and 500'),
-  body('location.coordinates')
-    .isArray({ min: 2, max: 2 })
-    .withMessage('Location coordinates must be [longitude, latitude]'),
-  body('location.coordinates.*').isFloat().withMessage('Coordinates must be valid numbers'),
-];
-
-const nearbyQueryValidation = [
-  query('lng').isFloat({ min: -180, max: 180 }).withMessage('Valid longitude required'),
-  query('lat').isFloat({ min: -90, max: 90 }).withMessage('Valid latitude required'),
-  query('radius')
-    .optional()
-    .isFloat({ min: 1, max: 1000 })
-    .withMessage('Radius must be between 1 and 1000 km'),
-];
 
 // ─── Controllers ──────────────────────────────────────────
 
@@ -227,6 +201,4 @@ module.exports = {
   getMyProfile,
   updateProfile,
   getAllSHGs,
-  createProfileValidation,
-  nearbyQueryValidation,
 };
