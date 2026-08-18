@@ -1,4 +1,3 @@
-const { body } = require('express-validator');
 const User = require('../models/User');
 const SHGProfile = require('../models/SHGProfile');
 const ProductBatch = require('../models/ProductBatch');

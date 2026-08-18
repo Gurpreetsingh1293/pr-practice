@@ -1,26 +1,8 @@
-const { body } = require('express-validator');
 const B2BOrder = require('../models/B2BOrder');
 const ProductBatch = require('../models/ProductBatch');
 const SHGProfile = require('../models/SHGProfile');
 const { AppError } = require('../middlewares/auth');
 const { canTransition, MILESTONE_STAGES } = require('../services/milestoneService');
-
-// ─── Validation ────────────────────────────────────────────
-const createOrderValidation = [
-  body('productBatchId').isMongoId().withMessage('Valid product batch ID required'),
-  body('quantity').isInt({ min: 1 }).withMessage('Quantity must be at least 1'),
-  body('deliveryAddress.city').notEmpty().withMessage('Delivery city is required'),
-  body('deliveryAddress.state').notEmpty().withMessage('Delivery state is required'),
-  body('deliveryAddress.pincode')
-    .matches(/^\d{6}$/)
-    .withMessage('Valid 6-digit pincode required'),
-];
-
-const milestoneValidation = [
-  body('nextStage')
-    .isIn(Object.values(MILESTONE_STAGES))
-    .withMessage('Invalid milestone stage'),
-];
 
 // ─── Controllers ──────────────────────────────────────────
 
@@ -281,6 +263,4 @@ module.exports = {
   getOrder,
   updateMilestone,
   cancelOrder,
-  createOrderValidation,
-  milestoneValidation,
 };

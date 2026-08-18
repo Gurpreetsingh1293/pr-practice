@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const { body } = require('express-validator');
 const User = require('../models/User');
 const { AppError } = require('../middlewares/auth');
 
@@ -37,25 +36,6 @@ const sendTokenCookie = (user, statusCode, res) => {
     data: { user },
   });
 };
-
-// ─── Validation Chains ────────────────────────────────────
-const registerValidation = [
-  body('name').trim().notEmpty().withMessage('Name is required').isLength({ max: 100 }),
-  body('email').isEmail().normalizeEmail().withMessage('Valid email is required'),
-  body('password')
-    .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-    .withMessage('Password must contain uppercase, lowercase, and a number'),
-  body('role')
-    .isIn(['shg_leader', 'b2b_buyer', 'ngo_admin'])
-    .withMessage('Role must be shg_leader, b2b_buyer, or ngo_admin'),
-];
-
-const loginValidation = [
-  body('email').isEmail().normalizeEmail().withMessage('Valid email is required'),
-  body('password').notEmpty().withMessage('Password is required'),
-];
 
 // ─── Controllers ──────────────────────────────────────────
 
@@ -171,6 +151,4 @@ module.exports = {
   logout,
   getMe,
   updateMe,
-  registerValidation,
-  loginValidation,
 };

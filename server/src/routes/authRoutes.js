@@ -6,16 +6,19 @@ const {
   logout,
   getMe,
   updateMe,
-  registerValidation,
-  loginValidation,
 } = require('../controllers/authController');
 const { protect } = require('../middlewares/auth');
 const validate = require('../middlewares/validate');
+const {
+  registerSchema,
+  loginSchema,
+  updateMeSchema,
+} = require('../schemas/authSchema');
 
-router.post('/register', registerValidation, validate, register);
-router.post('/login', loginValidation, validate, login);
+router.post('/register', validate(registerSchema), register);
+router.post('/login', validate(loginSchema), login);
 router.post('/logout', protect, logout);
 router.get('/me', protect, getMe);
-router.put('/me', protect, updateMe);
+router.put('/me', protect, validate(updateMeSchema), updateMe);
 
 module.exports = router;

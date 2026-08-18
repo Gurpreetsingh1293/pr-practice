@@ -6,16 +6,30 @@ const {
   getOrder,
   updateMilestone,
   cancelOrder,
-  createOrderValidation,
-  milestoneValidation,
 } = require('../controllers/orderController');
 const { protect, authorize } = require('../middlewares/auth');
 const validate = require('../middlewares/validate');
+const {
+  createOrderSchema,
+  updateMilestoneSchema,
+  orderQuerySchema,
+} = require('../schemas/orderSchema');
 
-router.post('/', protect, authorize('b2b_buyer'), createOrderValidation, validate, createOrder);
-router.get('/', protect, getOrders);
+router.post(
+  '/',
+  protect,
+  authorize('b2b_buyer'),
+  validate(createOrderSchema),
+  createOrder
+);
+router.get('/', protect, validate({ query: orderQuerySchema }), getOrders);
 router.get('/:id', protect, getOrder);
-router.patch('/:id/milestone', protect, milestoneValidation, validate, updateMilestone);
+router.patch(
+  '/:id/milestone',
+  protect,
+  validate(updateMilestoneSchema),
+  updateMilestone
+);
 router.delete('/:id', protect, authorize('b2b_buyer', 'ngo_admin'), cancelOrder);
 
 module.exports = router;
